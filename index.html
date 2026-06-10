@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0a0c0f">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#16181b">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -12,225 +12,273 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<title>Mil Correction</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<title>Mil Correct</title>
 <style>
-  :root {
-    --bg:#0a0c0f; --bg2:#111417; --bg3:#181c21;
-    --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.13);
-    --accent:#c8a84b; --accent2:#8fbf6a; --danger:#e24b4a;
-    --text:#e8e4dc; --text2:#8a8880; --text3:#5f5e5a;
-    --mono:'Share Tech Mono',monospace; --display:'Rajdhani',sans-serif;
-    --radius:10px; --radius-lg:16px;
+  :root{
+    --gold:#e0bd62; --green:#a4d178; --danger:#e0654f;
+    --metal-hi:#3a3d42; --metal-lo:#141517;
+    --text:#d8d4ca; --text2:#8a8474; --text3:#5f5a4e;
+    --mono:'Share Tech Mono',monospace; --disp:'Oswald',sans-serif;
     --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px);
   }
-  * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
-  html,body { background:var(--bg); color:var(--text); font-family:var(--display); min-height:100vh; overscroll-behavior:none; -webkit-font-smoothing:antialiased; }
-  body { padding-bottom:calc(1rem + var(--safe-bottom)); }
-  input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance:none; margin:0; }
-  input[type=number] { -moz-appearance:textfield; }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{min-height:100vh;color:var(--text);font-family:var(--disp);-webkit-font-smoothing:antialiased;overscroll-behavior:none;}
+  body{
+    background:
+      linear-gradient(180deg,rgba(255,255,255,0.05),transparent 22%),
+      repeating-linear-gradient(96deg,rgba(255,255,255,0.012) 0 2px,rgba(0,0,0,0.02) 2px 4px),
+      linear-gradient(155deg,#26282c 0%,#1c1e21 42%,#141517 100%);
+    background-attachment:fixed;
+    padding-bottom:calc(1rem + var(--safe-bottom));min-height:100vh;
+  }
+  input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+  input[type=number]{-moz-appearance:textfield;}
 
-  .app-header { background:var(--bg2); border-bottom:1px solid var(--border); padding:calc(0.7rem + var(--safe-top)) 1.1rem 0.7rem; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:10; }
-  .brand { display:flex; align-items:center; gap:8px; }
-  .brand .title { font-size:18px; font-weight:700; letter-spacing:0.1em; color:var(--accent); text-transform:uppercase; line-height:1; }
-  .range-pill { display:flex; align-items:center; gap:2px; background:var(--bg3); border:1px solid var(--border2); border-radius:8px; padding:5px 10px; }
-  .range-pill input { width:54px; background:transparent; border:none; outline:none; color:var(--text); font-family:var(--mono); font-size:17px; text-align:right; }
-  .range-pill input::placeholder { color:var(--text3); }
-  .range-pill .u { font-family:var(--mono); font-size:11px; color:var(--text2); }
+  /* ---------- header plate ---------- */
+  .plate{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;
+    padding:calc(0.8rem + var(--safe-top)) 1.1rem 0.8rem;
+    background:linear-gradient(180deg,#23252a,#191b1e);
+    border-bottom:1px solid rgba(0,0,0,0.6);box-shadow:0 1px 0 rgba(255,255,255,0.05),0 6px 16px rgba(0,0,0,0.35);}
+  .brand{display:flex;align-items:center;gap:9px;flex-shrink:0;}
+  .brand .name{font-size:16px;font-weight:600;letter-spacing:0.16em;color:#cfc9ba;text-transform:uppercase;white-space:nowrap;}
+  .range-disp{display:flex;align-items:baseline;gap:6px;background:#0e0f11;border:1px solid rgba(0,0,0,0.7);border-radius:7px;
+    padding:6px 12px;box-shadow:inset 0 2px 6px rgba(0,0,0,0.7),inset 0 -1px 0 rgba(255,255,255,0.03);}
+  .range-disp .l{font-family:var(--mono);font-size:8px;letter-spacing:0.12em;color:var(--text3);align-self:center;}
+  .range-disp input{width:62px;background:transparent;border:none;outline:none;color:#ece1c4;font-family:var(--mono);font-size:24px;font-weight:700;text-align:right;}
+  .range-disp input::placeholder{color:#54504a;}
+  .range-disp .u{font-family:var(--mono);font-size:12px;color:var(--text2);}
 
-  .main { padding:0.9rem 1.1rem; display:flex; flex-direction:column; gap:0.7rem; }
+  /* ---------- body ---------- */
+  .body{max-width:460px;margin:0 auto;padding:1rem 1.1rem 0;display:flex;flex-direction:column;gap:1.15rem;}
 
-  .scope-wrap { display:flex; flex-direction:column; align-items:center; }
-  .scope { width:132px; height:132px; display:block; }
-  .impact-lbl { color:#a8a59a; font-size:10px; font-family:var(--mono); letter-spacing:0.12em; text-align:center; margin-top:2px; min-height:14px; }
-  .impact-lbl .off { color:var(--danger); }
+  /* ---------- gauge (drag-ruler input) ---------- */
+  .gauge{display:flex;flex-direction:column;}
+  .g-head{display:flex;align-items:center;gap:10px;margin-bottom:9px;}
+  .g-name{flex:1;font-family:var(--disp);font-weight:500;font-size:11px;letter-spacing:0.26em;color:var(--text2);text-transform:uppercase;}
+  .g-read{font-family:var(--mono);font-size:18px;font-weight:700;display:flex;align-items:baseline;gap:3px;color:var(--acc);}
+  .g-read i{font-size:9px;opacity:0.55;font-style:normal;}
+  .g-read b{font-size:9px;letter-spacing:0.1em;margin-left:5px;opacity:0.85;font-weight:700;}
+  .g-seg{display:inline-flex;border-radius:7px;overflow:hidden;border:1px solid rgba(0,0,0,0.6);box-shadow:inset 0 1px 3px rgba(0,0,0,0.55);}
+  .g-seg button{font-family:var(--mono);font-size:13px;letter-spacing:0.04em;padding:9px 13px;min-width:40px;min-height:38px;background:linear-gradient(180deg,#202327,#191b1e);border:none;color:var(--text2);cursor:pointer;transition:background .12s,color .12s;}
+  .g-seg button + button{border-left:1px solid rgba(0,0,0,0.5);}
+  .g-seg button.on{background:var(--acc);color:#15171a;font-weight:700;text-shadow:0 1px 0 rgba(255,255,255,0.25);}
 
-  .axis { display:flex; flex-direction:column; gap:6px; }
-  .axis-head { display:flex; align-items:center; justify-content:space-between; gap:8px; }
-  .axis-name { font-size:10px; color:var(--text2); font-family:var(--mono); letter-spacing:0.14em; }
-  .axis-val { font-family:var(--mono); font-size:21px; font-weight:700; }
-  .axis-val .u { font-size:11px; color:var(--text2); margin-left:2px; }
-  .vw { color:var(--accent); } .ve { color:var(--accent2); }
+  .g-bar{position:relative;height:58px;border-radius:7px;overflow:hidden;touch-action:none;cursor:grab;
+    background:linear-gradient(180deg,#0d0e10,#16181b);
+    border:1px solid rgba(0,0,0,0.65);box-shadow:inset 0 2px 9px rgba(0,0,0,0.75),inset 0 -1px 0 rgba(255,255,255,0.04);}
+  .g-bar:active{cursor:grabbing;}
+  .g-bar canvas{display:block;width:100%;height:58px;}
+  .g-thumb{position:absolute;left:50%;top:0;bottom:0;width:18px;transform:translateX(-50%);pointer-events:none;border-radius:3px;
+    background:linear-gradient(180deg,#54575d 0%,#3a3d42 45%,#222428 100%);
+    box-shadow:0 2px 7px rgba(0,0,0,0.7),inset 0 1px 0 rgba(255,255,255,0.25),inset 0 0 0 1px rgba(0,0,0,0.55);}
+  .g-thumb::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;transform:translateX(-50%);background:var(--acc);box-shadow:0 0 7px var(--acc);opacity:0.85;}
+  .g-thumb::after{content:"";position:absolute;left:4px;right:4px;top:9px;bottom:9px;border-radius:1px;
+    background:repeating-linear-gradient(90deg,rgba(255,255,255,0.14) 0 1px,transparent 1px 3px),repeating-linear-gradient(90deg,rgba(0,0,0,0.4) 1px,transparent 1px 3px);}
 
-  .seg { display:inline-flex; background:var(--bg3); border:1px solid var(--border2); border-radius:8px; overflow:hidden; }
-  .seg button { padding:9px 18px; font-family:var(--mono); font-size:13px; font-weight:400; background:transparent; border:none; color:var(--text2); letter-spacing:0.08em; text-transform:uppercase; transition:background 0.15s,color 0.15s; cursor:pointer; }
-  .seg button.onw { background:rgba(200,168,75,0.15); color:var(--accent); }
-  .seg button.one { background:rgba(143,191,106,0.15); color:var(--accent2); }
+  /* ---------- target ---------- */
+  .target{display:flex;flex-direction:column;align-items:center;gap:11px;padding:0.3rem 0;}
+  .bezel{width:min(64vw,210px);aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 40% 32%,#22252a,#090a0c);border:4px solid #090a0c;
+    box-shadow:inset 0 0 26px rgba(0,0,0,0.85),inset 0 0 0 1px rgba(255,255,255,0.05),0 9px 24px rgba(0,0,0,0.5);}
+  .scope{width:84%;height:84%;display:block;}
+  .cap{font-family:var(--mono);font-size:10.5px;letter-spacing:0.1em;color:#bb8a63;text-align:center;min-height:14px;white-space:nowrap;}
+  .cap .off{color:var(--danger);}
+  .cap.idle{color:var(--text3);}
 
-  .scale-screen { position:relative; background:#15181c; border:1px solid var(--border2); border-radius:7px; overflow:hidden; height:52px; touch-action:none; cursor:grab; }
-  .scale-screen:active { cursor:grabbing; }
-  .scale-screen canvas { display:block; width:100%; height:52px; }
+  /* ---------- outputs ---------- */
+  .outs{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+  .out{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:5px;padding:14px 16px 15px;border-radius:11px;
+    background:linear-gradient(180deg,#1d1f22,#141517);border:1px solid rgba(0,0,0,0.55);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.05),0 5px 14px rgba(0,0,0,0.4);}
+  .out.w{box-shadow:inset 0 1px 0 rgba(255,255,255,0.05),inset 0 2px 0 rgba(224,189,98,0.5),0 5px 14px rgba(0,0,0,0.4);}
+  .out.e{box-shadow:inset 0 1px 0 rgba(255,255,255,0.05),inset 0 2px 0 rgba(164,209,120,0.5),0 5px 14px rgba(0,0,0,0.4);}
+  .out-lbl{font-family:var(--mono);font-size:8px;letter-spacing:0.2em;color:var(--text2);}
+  .out-big{font-family:var(--mono);font-size:42px;font-weight:700;line-height:0.95;text-shadow:0 2px 3px rgba(0,0,0,0.5);}
+  .out.w .out-big{color:#e9cb7a;} .out.e .out-big{color:#b8e08c;}
+  .out-big.idle{color:#43464a;font-size:34px;}
+  .out-sub{font-family:var(--mono);font-size:10px;color:var(--text2);letter-spacing:0.02em;min-height:13px;}
 
-  .dial-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-  .dial-card { background:var(--bg2); border:1px solid rgba(200,168,75,0.22); border-radius:var(--radius); padding:10px 12px; }
-  .dial-card.e { border-color:rgba(143,191,106,0.22); }
-  .dial-big { font-family:var(--mono); font-size:15px; font-weight:600; margin-bottom:5px; }
-  .dial-line { font-family:var(--mono); font-size:11px; color:#c4c2ba; }
-  .dial-line2 { font-family:var(--mono); font-size:11px; color:var(--text2); margin-top:2px; }
-  .dial-muted { font-family:var(--mono); font-size:12px; color:var(--text3); }
+  /* ---------- engraved formula ---------- */
+  .engrave{text-align:center;font-family:var(--mono);font-size:9px;letter-spacing:0.1em;color:var(--text3);text-shadow:0 1px 0 rgba(255,255,255,0.04);}
+  .engrave b{color:#9a7d52;font-weight:400;}
 
-  .formula-bar { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); padding:9px 13px; display:flex; align-items:center; justify-content:space-between; }
-  .formula-text { font-family:var(--mono); font-size:11px; color:var(--text3); letter-spacing:0.03em; }
-  .formula-accent { color:var(--accent); }
+  /* ---------- settings ---------- */
+  .settings{background:linear-gradient(180deg,#1c1e21,#161719);border:1px solid rgba(0,0,0,0.5);border-radius:11px;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);}
+  .set-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;padding:13px 15px;min-height:46px;background:transparent;border:none;cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:0.14em;color:var(--text2);text-transform:uppercase;white-space:nowrap;}
+  .set-toggle .chev{transition:transform .2s;color:var(--text3);}
+  .set-toggle .chev.open{transform:rotate(180deg);}
+  .set-body{max-height:0;overflow:hidden;transition:max-height .28s ease;}
+  .set-body.open{max-height:260px;}
+  .set-row{display:flex;align-items:center;justify-content:space-between;padding:6px 15px 12px;gap:12px;}
+  .set-row label{font-family:var(--disp);font-size:14px;color:var(--text2);letter-spacing:0.02em;}
+  .click-wrap{position:relative;width:128px;}
+  .click-wrap input{width:100%;background:#0e0f11;border:1px solid rgba(0,0,0,0.7);border-radius:8px;color:#ece1c4;font-family:var(--mono);font-size:17px;padding:10px 38px 10px 13px;outline:none;box-shadow:inset 0 2px 6px rgba(0,0,0,0.65);}
+  .click-wrap input:focus{border-color:var(--gold);}
+  .click-u{position:absolute;right:13px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:11px;color:var(--text3);pointer-events:none;}
+  .preset-row{display:flex;gap:9px;padding:0 15px 13px;}
+  .preset-btn{flex:1;padding:10px;min-height:42px;border-radius:8px;background:linear-gradient(180deg,#23262a,#1a1c1f);border:1px solid rgba(0,0,0,0.5);color:var(--text2);font-family:var(--mono);font-size:13px;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);}
+  .preset-btn.active{color:#15171a;background:var(--gold);font-weight:700;}
+  .ref-row{padding:0 15px 15px;}
+  .ref-btn{width:100%;padding:12px;min-height:46px;border-radius:8px;background:linear-gradient(180deg,#23262a,#191b1e);border:1px solid rgba(224,189,98,0.3);color:var(--gold);font-family:var(--mono);font-size:13px;letter-spacing:0.06em;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);}
+  .ref-btn:active{background:rgba(224,189,98,0.12);}
 
-  .settings { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
-  .settings-toggle { width:100%; display:flex; align-items:center; justify-content:space-between; padding:11px 13px; background:transparent; border:none; cursor:pointer; font-family:var(--mono); font-size:11px; color:var(--text2); letter-spacing:0.1em; text-transform:uppercase; min-height:42px; }
-  .chevron { transition:transform 0.2s; color:var(--text3); }
-  .chevron.open { transform:rotate(180deg); }
-  .settings-body { max-height:0; overflow:hidden; transition:max-height 0.25s ease; }
-  .settings-body.open { max-height:200px; }
-  .setting-row { display:flex; align-items:center; justify-content:space-between; padding:4px 13px 11px; gap:12px; }
-  .setting-row label { font-size:13px; color:var(--text2); }
-  .click-input-wrap { position:relative; width:118px; }
-  .click-input-wrap input { width:100%; background:var(--bg3); border:1px solid var(--border2); border-radius:var(--radius); color:var(--text); font-family:var(--mono); font-size:17px; padding:9px 36px 9px 12px; outline:none; -webkit-appearance:none; }
-  .click-input-wrap input:focus { border-color:var(--accent); }
-  .click-unit { position:absolute; right:12px; top:50%; transform:translateY(-50%); font-family:var(--mono); font-size:11px; color:var(--text3); pointer-events:none; }
-  .preset-row { display:flex; gap:8px; padding:0 13px 13px; }
-  .preset-btn { flex:1; padding:8px; border-radius:8px; background:var(--bg3); border:1px solid var(--border); color:var(--text2); font-family:var(--mono); font-size:13px; cursor:pointer; min-height:40px; }
-  .preset-btn:active { background:rgba(200,168,75,0.12); color:var(--accent); }
-  .ref-row { padding:0 13px 13px; }
-  .ref-btn { width:100%; padding:11px; border-radius:8px; background:var(--bg3); border:1px solid var(--border2); color:var(--accent); font-family:var(--mono); font-size:13px; letter-spacing:0.06em; cursor:pointer; min-height:44px; }
-  .ref-btn:active { background:rgba(200,168,75,0.12); }
+  /* ---------- modal ---------- */
+  .modal{display:none;position:fixed;inset:0;z-index:200;background:#141517;flex-direction:column;}
+  .modal.open{display:flex;}
+  .modal-bar{display:flex;align-items:center;justify-content:space-between;padding:calc(0.7rem + var(--safe-top)) 1rem 0.7rem;background:linear-gradient(180deg,#23252a,#191b1e);border-bottom:1px solid rgba(0,0,0,0.6);box-shadow:0 1px 0 rgba(255,255,255,0.05);}
+  .modal-title{font-family:var(--disp);font-size:14px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);white-space:nowrap;}
+  .modal-tools{display:flex;gap:8px;}
+  .zbtn{width:42px;height:42px;border-radius:8px;background:linear-gradient(180deg,#26292e,#1a1c1f);border:1px solid rgba(0,0,0,0.5);color:var(--text);font-family:var(--mono);font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 1px 0 rgba(255,255,255,0.06);}
+  .zbtn.close{color:var(--text2);font-size:16px;}
+  .zbtn:active{background:rgba(224,189,98,0.14);}
+  .modal-scroll{flex:1;overflow:auto;background:#fff;touch-action:auto;-webkit-overflow-scrolling:touch;display:flex;align-items:flex-start;}
+  .modal-scroll img{display:block;width:100%;transform-origin:top left;user-select:none;-webkit-user-drag:none;}
+  .modal-hint{padding:9px calc(0.6rem + var(--safe-bottom));padding-bottom:calc(9px + var(--safe-bottom));text-align:center;font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:0.08em;background:#191b1e;border-top:1px solid rgba(0,0,0,0.5);}
 
-  .modal { display:none; position:fixed; inset:0; z-index:200; background:#0a0c0f; flex-direction:column; }
-  .modal.open { display:flex; }
-  .modal-bar { display:flex; align-items:center; justify-content:space-between; padding:calc(0.7rem + var(--safe-top)) 1rem 0.7rem; background:var(--bg2); border-bottom:1px solid var(--border); }
-  .modal-title { font-family:var(--display); font-size:14px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--accent); white-space:nowrap; }
-  .modal-tools { display:flex; gap:8px; }
-  .zoom-btn { width:40px; height:40px; border-radius:8px; background:var(--bg3); border:1px solid var(--border2); color:var(--text); font-family:var(--mono); font-size:20px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; }
-  .zoom-btn.close { color:var(--text2); font-size:16px; }
-  .zoom-btn:active { background:rgba(200,168,75,0.12); }
-  .modal-scroll { flex:1; overflow:auto; background:#ffffff; touch-action:auto; -webkit-overflow-scrolling:touch; display:flex; align-items:center; }
-  .modal-scroll img { display:block; width:100%; transform-origin:top left; user-select:none; -webkit-user-drag:none; }
-  .modal-hint { padding:8px calc(0.6rem + var(--safe-bottom)); padding-bottom:calc(8px + var(--safe-bottom)); text-align:center; font-family:var(--mono); font-size:10px; color:var(--text3); letter-spacing:0.08em; background:var(--bg2); border-top:1px solid var(--border); }
-
-  #install-banner { display:none; position:fixed; bottom:calc(1rem + var(--safe-bottom)); left:1rem; right:1rem; z-index:100; background:var(--bg2); border:1px solid rgba(200,168,75,0.35); border-radius:var(--radius-lg); padding:1rem 1.25rem; }
-  #install-banner.visible { display:block; }
-  .banner-row { display:flex; align-items:center; gap:12px; }
-  .banner-icon { width:44px; height:44px; border-radius:10px; flex-shrink:0; }
-  .banner-title { font-size:14px; font-weight:600; color:var(--text); }
-  .banner-sub { font-size:12px; color:var(--text2); font-family:var(--mono); margin-top:2px; }
-  .banner-btns { display:flex; gap:8px; margin-top:10px; }
-  .btn-install { flex:1; padding:10px; border-radius:var(--radius); background:var(--accent); color:#0a0c0f; font-family:var(--display); font-size:14px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; border:none; cursor:pointer; min-height:44px; }
-  .btn-dismiss { padding:10px 16px; border-radius:var(--radius); background:transparent; color:var(--text2); font-family:var(--display); font-size:14px; font-weight:600; border:1px solid var(--border2); cursor:pointer; min-height:44px; }
-  .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0; }
+  /* ---------- install banner ---------- */
+  #install-banner{display:none;position:fixed;bottom:calc(1rem + var(--safe-bottom));left:1rem;right:1rem;z-index:100;max-width:430px;margin:0 auto;background:linear-gradient(180deg,#23262a,#16181b);border:1px solid rgba(224,189,98,0.35);border-radius:14px;padding:1rem 1.1rem;box-shadow:0 12px 30px rgba(0,0,0,0.55);}
+  #install-banner.visible{display:block;}
+  .banner-row{display:flex;align-items:center;gap:12px;}
+  .banner-icon{width:44px;height:44px;border-radius:10px;flex-shrink:0;}
+  .banner-title{font-family:var(--disp);font-size:15px;font-weight:600;color:var(--text);letter-spacing:0.02em;}
+  .banner-sub{font-size:12px;color:var(--text2);font-family:var(--mono);margin-top:2px;}
+  .banner-btns{display:flex;gap:9px;margin-top:11px;}
+  .btn-install{flex:1;padding:11px;border-radius:9px;background:var(--gold);color:#15171a;font-family:var(--disp);font-size:14px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border:none;cursor:pointer;min-height:46px;}
+  .btn-dismiss{padding:11px 18px;border-radius:9px;background:transparent;color:var(--text2);font-family:var(--disp);font-size:14px;font-weight:600;border:1px solid rgba(255,255,255,0.12);cursor:pointer;min-height:46px;}
 </style>
 </head>
 <body>
 
-<header class="app-header">
+<header class="plate">
   <div class="brand">
-    <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
-      <circle cx="16" cy="16" r="11" stroke="#c8a84b" stroke-width="1.2" stroke-opacity="0.4"/>
-      <circle cx="16" cy="16" r="5.5" stroke="#c8a84b" stroke-width="1.2" stroke-opacity="0.75"/>
-      <circle cx="16" cy="16" r="1.8" fill="#c8a84b"/>
-      <line x1="16" y1="2" x2="16" y2="8" stroke="#c8a84b" stroke-width="1.2" stroke-opacity="0.6"/>
-      <line x1="16" y1="24" x2="16" y2="30" stroke="#c8a84b" stroke-width="1.2" stroke-opacity="0.6"/>
-      <line x1="2" y1="16" x2="8" y2="16" stroke="#c8a84b" stroke-width="1.2" stroke-opacity="0.6"/>
-      <line x1="24" y1="16" x2="30" y2="16" stroke="#c8a84b" stroke-width="1.2" stroke-opacity="0.6"/>
+    <svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <circle cx="16" cy="16" r="11" stroke="#e0bd62" stroke-width="1.2" stroke-opacity="0.4"/>
+      <circle cx="16" cy="16" r="5.5" stroke="#e0bd62" stroke-width="1.2" stroke-opacity="0.78"/>
+      <circle cx="16" cy="16" r="1.8" fill="#e0bd62"/>
+      <line x1="16" y1="2" x2="16" y2="8" stroke="#e0bd62" stroke-width="1.2" stroke-opacity="0.6"/>
+      <line x1="16" y1="24" x2="16" y2="30" stroke="#e0bd62" stroke-width="1.2" stroke-opacity="0.6"/>
+      <line x1="2" y1="16" x2="8" y2="16" stroke="#e0bd62" stroke-width="1.2" stroke-opacity="0.6"/>
+      <line x1="24" y1="16" x2="30" y2="16" stroke="#e0bd62" stroke-width="1.2" stroke-opacity="0.6"/>
     </svg>
-    <span class="title">Mil Correct</span>
+    <span class="name">Mil Correct</span>
   </div>
-  <div class="range-pill">
-    <input type="number" id="range" inputmode="numeric" placeholder="600" min="1" step="1" autocomplete="off">
+  <div class="range-disp">
+    <span class="l">RANGE</span>
+    <input type="number" id="range" inputmode="numeric" placeholder="600" min="1" step="1" autocomplete="off" aria-label="Target range in metres">
     <span class="u">m</span>
   </div>
 </header>
 
-<main class="main">
+<main class="body">
 
-  <div class="scope-wrap">
-    <svg class="scope" id="scope" viewBox="0 0 132 132" role="img" aria-label="Reticle showing impact point relative to target centre">
-      <circle cx="66" cy="66" r="56" stroke="rgba(200,168,75,0.28)" stroke-width="1" fill="none"/>
-      <circle cx="66" cy="66" r="38" stroke="rgba(200,168,75,0.4)" stroke-width="1" fill="none"/>
-      <circle cx="66" cy="66" r="19" stroke="rgba(200,168,75,0.4)" stroke-width="1" fill="none"/>
-      <line x1="66" y1="4" x2="66" y2="50" stroke="rgba(200,168,75,0.45)" stroke-width="1"/>
-      <line x1="66" y1="82" x2="66" y2="128" stroke="rgba(200,168,75,0.45)" stroke-width="1"/>
-      <line x1="4" y1="66" x2="50" y2="66" stroke="rgba(200,168,75,0.45)" stroke-width="1"/>
-      <line x1="82" y1="66" x2="128" y2="66" stroke="rgba(200,168,75,0.45)" stroke-width="1"/>
-      <text x="88" y="63" fill="rgba(232,228,220,0.4)" font-family="Share Tech Mono, monospace" font-size="7">3</text>
-      <text x="107" y="63" fill="rgba(232,228,220,0.4)" font-family="Share Tech Mono, monospace" font-size="7">6</text>
-      <circle cx="66" cy="66" r="2" fill="#c8a84b"/>
-      <circle id="impact-dot" cx="66" cy="66" r="4.5" fill="#e24b4a" opacity="0"/>
-      <circle id="impact-ring" cx="66" cy="66" r="8" fill="none" stroke="#e24b4a" stroke-width="1" opacity="0"/>
-    </svg>
-    <div class="impact-lbl" id="impact-lbl">— enter range and miss —</div>
-  </div>
-
-  <div class="axis">
-    <div class="axis-head">
-      <span class="axis-name">WINDAGE</span>
-      <span class="axis-val vw"><span id="disp-h">0.00</span><span class="u">m</span></span>
-      <span class="seg">
-        <button class="onw" id="btn-left" onclick="setHDir('Left')">◀ L</button>
-        <button id="btn-right" onclick="setHDir('Right')">R ▶</button>
+  <!-- WINDAGE gauge -->
+  <div class="gauge" id="ax-h" style="--acc:var(--gold)">
+    <div class="g-head">
+      <span class="g-name">Windage Miss</span>
+      <span class="g-read"><span id="disp-h">0.00</span><i>m</i><b id="tag-h">LEFT</b></span>
+      <span class="g-seg">
+        <button id="btn-left" class="on" onclick="setHDir('Left')">L</button>
+        <button id="btn-right" onclick="setHDir('Right')">R</button>
       </span>
     </div>
-    <div class="scale-screen" id="scr-h"><canvas id="cv-h"></canvas></div>
+    <div class="g-bar" id="scr-h"><canvas id="cv-h"></canvas><div class="g-thumb"></div></div>
   </div>
 
-  <div class="axis">
-    <div class="axis-head">
-      <span class="axis-name">ELEVATION</span>
-      <span class="axis-val ve"><span id="disp-v">0.00</span><span class="u">m</span></span>
-      <span class="seg">
-        <button class="one" id="btn-high" onclick="setVDir('High')">▲ H</button>
-        <button id="btn-low" onclick="setVDir('Low')">L ▼</button>
+  <!-- ELEVATION gauge -->
+  <div class="gauge" id="ax-v" style="--acc:var(--green)">
+    <div class="g-head">
+      <span class="g-name">Elevation Miss</span>
+      <span class="g-read"><span id="disp-v">0.00</span><i>m</i><b id="tag-v">HIGH</b></span>
+      <span class="g-seg">
+        <button id="btn-high" class="on" onclick="setVDir('High')">H</button>
+        <button id="btn-low" onclick="setVDir('Low')">L</button>
       </span>
     </div>
-    <div class="scale-screen" id="scr-v"><canvas id="cv-v"></canvas></div>
+    <div class="g-bar" id="scr-v"><canvas id="cv-v"></canvas><div class="g-thumb"></div></div>
   </div>
 
-  <div class="dial-grid">
-    <div class="dial-card" id="card-h"><div class="dial-muted">— windage —</div></div>
-    <div class="dial-card e" id="card-v"><div class="dial-muted">— elevation —</div></div>
+  <!-- TARGET -->
+  <div class="target">
+    <div class="bezel">
+      <svg class="scope" id="scope" viewBox="0 0 132 132" role="img" aria-label="Reticle showing impact point relative to target centre">
+        <circle cx="66" cy="66" r="56" stroke="rgba(224,189,98,0.30)" stroke-width="1" fill="none"/>
+        <circle cx="66" cy="66" r="38" stroke="rgba(224,189,98,0.42)" stroke-width="1" fill="none"/>
+        <circle cx="66" cy="66" r="19" stroke="rgba(224,189,98,0.42)" stroke-width="1" fill="none"/>
+        <line x1="66" y1="4" x2="66" y2="50" stroke="rgba(164,209,120,0.55)" stroke-width="1"/>
+        <line x1="66" y1="82" x2="66" y2="128" stroke="rgba(164,209,120,0.55)" stroke-width="1"/>
+        <line x1="4" y1="66" x2="50" y2="66" stroke="rgba(164,209,120,0.55)" stroke-width="1"/>
+        <line x1="82" y1="66" x2="128" y2="66" stroke="rgba(164,209,120,0.55)" stroke-width="1"/>
+        <text x="88" y="63" fill="rgba(216,212,202,0.4)" font-family="Share Tech Mono, monospace" font-size="7">3</text>
+        <text x="107" y="63" fill="rgba(216,212,202,0.4)" font-family="Share Tech Mono, monospace" font-size="7">6</text>
+        <circle cx="66" cy="66" r="2" fill="#a4d178"/>
+        <circle id="impact-dot" cx="66" cy="66" r="4.5" fill="#e0654f" opacity="0"/>
+        <circle id="impact-ring" cx="66" cy="66" r="8" fill="none" stroke="#e0654f" stroke-width="1" opacity="0"/>
+      </svg>
+    </div>
+    <div class="cap idle" id="impact-lbl">— ENTER RANGE &amp; MISS —</div>
   </div>
 
-  <div class="formula-bar">
-    <span class="formula-text"><span class="formula-accent">C</span> = ( miss ÷ range ) × 1000</span>
-    <span class="formula-text" id="cv-display">0.10 mil/click</span>
+  <!-- OUTPUTS -->
+  <div class="outs">
+    <div class="out w" id="out-h">
+      <span class="out-lbl">WINDAGE</span>
+      <span class="out-big idle">—</span>
+      <span class="out-sub">awaiting input</span>
+    </div>
+    <div class="out e" id="out-v">
+      <span class="out-lbl">ELEVATION</span>
+      <span class="out-big idle">—</span>
+      <span class="out-sub">awaiting input</span>
+    </div>
   </div>
 
+  <div class="engrave">C = ( miss &divide; range ) &times; 1000 &nbsp;&middot;&nbsp; <b id="cv-display">0.10 mil/click</b></div>
+
+  <!-- SETTINGS -->
   <div class="settings">
-    <button class="settings-toggle" id="settings-toggle" onclick="toggleSettings()" aria-expanded="false">
-      <span>⚙ Scope Settings</span><span class="chevron" id="chevron">▾</span>
+    <button class="set-toggle" id="set-toggle" onclick="toggleSettings()" aria-expanded="false">
+      <span>&#9881; Scope Settings</span><span class="chev" id="chev">&#9662;</span>
     </button>
-    <div class="settings-body" id="settings-body">
-      <div class="setting-row">
+    <div class="set-body" id="set-body">
+      <div class="set-row">
         <label for="click-val">Click value</label>
-        <div class="click-input-wrap">
+        <div class="click-wrap">
           <input type="number" id="click-val" inputmode="decimal" value="0.10" min="0.01" step="0.01" autocomplete="off">
-          <span class="click-unit">mil</span>
+          <span class="click-u">mil</span>
         </div>
       </div>
       <div class="preset-row">
-        <button class="preset-btn" onclick="setClick(0.1)">0.10</button>
-        <button class="preset-btn" onclick="setClick(0.05)">0.05</button>
-        <button class="preset-btn" onclick="setClick(0.025)">0.025</button>
+        <button class="preset-btn active" data-v="0.1" onclick="setClick(0.1)">0.10</button>
+        <button class="preset-btn" data-v="0.05" onclick="setClick(0.05)">0.05</button>
+        <button class="preset-btn" data-v="0.025" onclick="setClick(0.025)">0.025</button>
       </div>
       <div class="ref-row">
-        <button class="ref-btn" onclick="openReticle()">⊹ MSR2 Reticle Reference</button>
+        <button class="ref-btn" onclick="openReticle()">&#8759; MSR2 Reticle Reference</button>
       </div>
     </div>
   </div>
 
 </main>
 
+<!-- RETICLE MODAL -->
 <div id="reticle-modal" class="modal">
   <div class="modal-bar">
     <span class="modal-title">MSR2 Reticle Reference</span>
     <div class="modal-tools">
-      <button class="zoom-btn" id="zoom-out" aria-label="Zoom out">−</button>
-      <button class="zoom-btn" id="zoom-in" aria-label="Zoom in">+</button>
-      <button class="zoom-btn close" onclick="closeReticle()" aria-label="Close">✕</button>
+      <button class="zbtn" id="zoom-out" aria-label="Zoom out">&minus;</button>
+      <button class="zbtn" id="zoom-in" aria-label="Zoom in">+</button>
+      <button class="zbtn close" onclick="closeReticle()" aria-label="Close">&#10005;</button>
     </div>
   </div>
   <div class="modal-scroll" id="modal-scroll">
     <img src="msr2-reticle.png" id="reticle-img" alt="MSR2 reticle subtension reference chart" draggable="false">
   </div>
-  <div class="modal-hint">Pinch or use +/− to zoom · drag to pan</div>
+  <div class="modal-hint">Pinch or use +/&minus; to zoom &middot; drag to pan</div>
 </div>
 
+<!-- INSTALL BANNER -->
 <div id="install-banner">
   <div class="banner-row">
     <img src="icon-192.png" class="banner-icon" alt="App icon">
@@ -243,87 +291,110 @@
 </div>
 
 <script>
-  let hDir = 'Left';
-  let vDir = 'High';
+/* Mil Correct — Direction B (Machined). Live scope-correction logic. */
+(function () {
+  'use strict';
+
+  let hDir = 'Left';   // windage miss direction
+  let vDir = 'High';   // elevation miss direction
   let clickValue = 0.1;
-  const PX_PER_MIL = 56 / 6;   // reticle rim (r=56) = 6 mil
+  const PX_PER_MIL = 56 / 6;   // reticle rim (r=56) == 6 mil
   const RIM_MIL = 6;
 
   const rulers = {};
+  const $ = id => document.getElementById(id);
 
-  function setHDir(dir) {
+  const opp = d => ({ Left: 'Right', Right: 'Left', High: 'Low', Low: 'High' }[d]);
+  const SHORT = { Right: 'R', Left: 'L', High: 'UP', Low: 'DN' };
+
+  // ---- direction toggles ----
+  window.setHDir = function (dir) {
     hDir = dir;
-    document.getElementById('btn-left').className  = (dir === 'Left'  ? 'onw' : '');
-    document.getElementById('btn-right').className = (dir === 'Right' ? 'onw' : '');
+    $('btn-left').className = (dir === 'Left' ? 'on' : '');
+    $('btn-right').className = (dir === 'Right' ? 'on' : '');
+    $('tag-h').textContent = dir.toUpperCase();
     calculate();
-  }
-  function setVDir(dir) {
+  };
+  window.setVDir = function (dir) {
     vDir = dir;
-    document.getElementById('btn-high').className = (dir === 'High' ? 'one' : '');
-    document.getElementById('btn-low').className  = (dir === 'Low'  ? 'one' : '');
+    $('btn-high').className = (dir === 'High' ? 'on' : '');
+    $('btn-low').className = (dir === 'Low' ? 'on' : '');
+    $('tag-v').textContent = dir.toUpperCase();
     calculate();
-  }
-  function opp(d) { return {Left:'Right',Right:'Left',High:'Low',Low:'High'}[d]; }
+  };
 
-  function toggleSettings() {
-    const body = document.getElementById('settings-body');
-    const chev = document.getElementById('chevron');
-    const tog  = document.getElementById('settings-toggle');
+  // ---- settings ----
+  window.toggleSettings = function () {
+    const body = $('set-body'), chev = $('chev'), tog = $('set-toggle');
     const open = body.classList.toggle('open');
     chev.classList.toggle('open', open);
     tog.setAttribute('aria-expanded', open ? 'true' : 'false');
-  }
+  };
   function applyClickValue(v) {
     if (!v || v <= 0 || isNaN(v)) return;
     clickValue = v;
-    document.getElementById('cv-display').textContent =
-      v.toFixed(3).replace(/0+$/,'').replace(/\.$/,'') + ' mil/click';
+    $('cv-display').textContent =
+      v.toFixed(3).replace(/0+$/, '').replace(/\.$/, '') + ' mil/click';
+    document.querySelectorAll('.preset-btn').forEach(b =>
+      b.classList.toggle('active', Math.abs(parseFloat(b.dataset.v) - v) < 1e-9));
     calculate();
   }
-  function setClick(v) { document.getElementById('click-val').value = v; applyClickValue(v); }
+  window.setClick = function (v) { $('click-val').value = v; applyClickValue(v); };
 
+  // ---- reticle impact dot + caption ----
   function updateReticle(milH, milV, hasData) {
-    const dot  = document.getElementById('impact-dot');
-    const ring = document.getElementById('impact-ring');
-    const lbl  = document.getElementById('impact-lbl');
+    const dot = $('impact-dot'), ring = $('impact-ring'), lbl = $('impact-lbl');
     if (!hasData) {
-      dot.setAttribute('opacity','0'); ring.setAttribute('opacity','0');
-      lbl.innerHTML = '— enter range and miss —';
+      dot.setAttribute('opacity', '0'); ring.setAttribute('opacity', '0');
+      lbl.className = 'cap idle';
+      lbl.innerHTML = '— ENTER RANGE &amp; MISS —';
       return;
     }
     const sx = (hDir === 'Right') ? 1 : -1;
-    const sy = (vDir === 'Low')   ? 1 : -1;
+    const sy = (vDir === 'Low') ? 1 : -1;
     let dx = sx * milH * PX_PER_MIL;
     let dy = sy * milV * PX_PER_MIL;
     const dist = Math.hypot(dx, dy);
     const rim = RIM_MIL * PX_PER_MIL;
     let off = false;
     if (dist > rim && dist > 0) { const k = rim / dist; dx *= k; dy *= k; off = true; }
-    dot.setAttribute('cx', 66 + dx);  dot.setAttribute('cy', 66 + dy);
+    dot.setAttribute('cx', 66 + dx); dot.setAttribute('cy', 66 + dy);
     ring.setAttribute('cx', 66 + dx); ring.setAttribute('cy', 66 + dy);
-    dot.setAttribute('opacity', (milH === 0 && milV === 0) ? '0' : '1');
-    ring.setAttribute('opacity', (milH === 0 && milV === 0) ? '0' : '0.5');
-    const hTxt = milH > 0 ? `${rulers.h.value.toFixed(2)} m ${hDir === 'Left' ? 'L' : 'R'}` : '';
-    const vTxt = milV > 0 ? `${rulers.v.value.toFixed(2)} m ${vDir === 'High' ? 'HIGH' : 'LOW'}` : '';
+    const zero = (milH === 0 && milV === 0);
+    dot.setAttribute('opacity', zero ? '0' : '1');
+    ring.setAttribute('opacity', zero ? '0' : '0.5');
+
+    const hTxt = milH > 0 ? `${rulers.h.value.toFixed(2)} ${hDir === 'Left' ? 'L' : 'R'}` : '';
+    const vTxt = milV > 0 ? `${rulers.v.value.toFixed(2)} ${vDir === 'High' ? 'HIGH' : 'LOW'}` : '';
     const parts = [hTxt, vTxt].filter(Boolean).join('  ·  ');
-    lbl.innerHTML = parts ? ('IMPACT · ' + parts + (off ? ' <span class="off">(off-scale)</span>' : '')) : 'ON ZERO';
+    lbl.className = 'cap';
+    lbl.innerHTML = parts
+      ? ('IMPACT&nbsp;&nbsp;' + parts + (off ? ' <span class="off">(OFF-SCALE)</span>' : ''))
+      : 'ON ZERO';
   }
 
-  function dialCard(el, mil, corr, accentClass, hasData) {
-    if (!hasData || mil <= 0) {
-      el.innerHTML = '<div class="dial-muted">— ' + (accentClass === 'vw' ? 'windage' : 'elevation') + ' —</div>';
-      return;
+  // ---- output plate ----
+  function updateOut(axis, mil, corr, hasData) {
+    const plate = $('out-' + axis);
+    const big = plate.querySelector('.out-big');
+    const sub = plate.querySelector('.out-sub');
+    if (!hasData) {
+      big.className = 'out-big idle'; big.textContent = '—';
+      sub.textContent = 'awaiting input'; return;
+    }
+    if (mil <= 0) {
+      big.className = 'out-big idle'; big.textContent = '0';
+      sub.textContent = 'on zero'; return;
     }
     const clicks = Math.floor(mil / clickValue + 1e-9);
-    const hold   = mil - clicks * clickValue;
-    el.innerHTML =
-      `<div class="dial-big ${accentClass}">${corr.toUpperCase()} ${mil.toFixed(2)} mil</div>` +
-      `<div class="dial-line">${clicks} clicks ${corr.toLowerCase()}</div>` +
-      `<div class="dial-line2">hold ${hold.toFixed(2)} mil</div>`;
+    const hold = mil - clicks * clickValue;
+    big.className = 'out-big';
+    big.innerHTML = SHORT[corr] + '&thinsp;' + clicks;
+    sub.textContent = mil.toFixed(2) + ' mil' + (hold > 0.0011 ? ' · hold ' + hold.toFixed(2) : '');
   }
 
   function calculate() {
-    const range = parseFloat(document.getElementById('range').value);
+    const range = parseFloat($('range').value);
     const missH = rulers.h ? rulers.h.value : 0;
     const missV = rulers.v ? rulers.v.value : 0;
     const hasRange = range && range > 0;
@@ -332,23 +403,23 @@
     const milV = (hasRange && missV > 0) ? (missV / range) * 1000 : 0;
 
     updateReticle(milH, milV, hasRange);
-    dialCard(document.getElementById('card-h'), milH, opp(hDir), 'vw', hasRange);
-    dialCard(document.getElementById('card-v'), milV, opp(vDir), 've', hasRange);
+    updateOut('h', milH, opp(hDir), hasRange);
+    updateOut('v', milV, opp(vDir), hasRange);
   }
+  window._milCalc = calculate;
 
-  document.getElementById('range').addEventListener('input', calculate);
-  document.getElementById('click-val').addEventListener('input', function () { applyClickValue(parseFloat(this.value)); });
+  $('range').addEventListener('input', calculate);
+  $('click-val').addEventListener('input', function () { applyClickValue(parseFloat(this.value)); });
 
-  // ── Instrument-scale drag ruler engine ──
+  // ============ instrument-scale drag ruler ============
   function makeRuler(opts) {
-    const screen = document.getElementById(opts.screenId);
-    const cv = document.getElementById(opts.canvasId);
-    const disp = document.getElementById(opts.dispId);
+    const screen = $(opts.screenId);
+    const cv = $(opts.canvasId);
+    const disp = $(opts.dispId);
     const ctx = cv.getContext('2d');
-    const accent = opts.accent;
     const SPACING = opts.spacing;
     const STEP = 0.01, FRICTION = 0.94, STOP = 0.000004;
-    let value = 0, vel = 0, raf = null, lastT = 0, H = 52, W = 0;
+    let value = 0, vel = 0, raf = null, lastT = 0, H = 58, W = 0;
     let dragging = false, samples = [], startX = 0, startVal = 0;
 
     const api = { get value() { return value; } };
@@ -362,8 +433,9 @@
     }
     function draw() {
       ctx.clearRect(0, 0, W, H);
-      const cx = W / 2, top = 10;
-      ctx.strokeStyle = 'rgba(232,228,220,0.28)'; ctx.lineWidth = 1;
+      const cx = W / 2, top = 11;
+      // recessed top rail
+      ctx.strokeStyle = 'rgba(230,224,205,0.16)'; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.moveTo(0, top); ctx.lineTo(W, top); ctx.stroke();
       const half = Math.ceil((W / 2) / SPACING) + 2;
       const base = Math.round(value / STEP);
@@ -373,24 +445,21 @@
         const x = cx + (t - value) / STEP * SPACING;
         if (x < -2 || x > W + 2) continue;
         const major = idx % 10 === 0, mid = idx % 5 === 0;
-        const h = major ? 20 : (mid ? 12 : 6);
-        ctx.strokeStyle = major ? 'rgba(232,228,220,0.72)' : (mid ? 'rgba(232,228,220,0.48)' : 'rgba(232,228,220,0.26)');
+        const h = major ? 22 : (mid ? 13 : 7);
+        ctx.strokeStyle = major ? 'rgba(232,226,208,0.78)' : (mid ? 'rgba(232,226,208,0.5)' : 'rgba(232,226,208,0.26)');
         ctx.lineWidth = major ? 1.4 : 1;
         ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, top + h); ctx.stroke();
         if (major) {
-          ctx.fillStyle = 'rgba(232,228,220,0.68)';
+          ctx.fillStyle = 'rgba(232,226,208,0.6)';
           ctx.font = '10px "Share Tech Mono", monospace';
           ctx.textAlign = 'center';
           ctx.fillText(t.toFixed(2), x, top + h + 12);
         }
       }
-      ctx.fillStyle = accent;
-      ctx.beginPath(); ctx.moveTo(cx - 5, 0); ctx.lineTo(cx + 5, 0); ctx.lineTo(cx, 7); ctx.closePath(); ctx.fill();
-      ctx.strokeStyle = accent; ctx.lineWidth = 1.5;
-      ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, H - 2); ctx.stroke();
+      // engraved zero-floor shadow on far left edge when near 0
     }
     function setVal(v) { value = Math.max(0, v); disp.textContent = value.toFixed(2); }
-    function haptic() { try { if (navigator.vibrate) navigator.vibrate(12); } catch (e) {} }
+    function haptic() { try { if (navigator.vibrate) navigator.vibrate(11); } catch (e) {} }
 
     function onDown(e) {
       cancelAnimationFrame(raf); raf = null; vel = 0; dragging = true;
@@ -459,15 +528,15 @@
     return api;
   }
 
-  rulers.h = makeRuler({ screenId:'scr-h', canvasId:'cv-h', dispId:'disp-h', accent:'#c8a84b', spacing:15 });
-  rulers.v = makeRuler({ screenId:'scr-v', canvasId:'cv-v', dispId:'disp-v', accent:'#8fbf6a', spacing:15 });
+  rulers.h = makeRuler({ screenId: 'scr-h', canvasId: 'cv-h', dispId: 'disp-h', spacing: 15 });
+  rulers.v = makeRuler({ screenId: 'scr-v', canvasId: 'cv-v', dispId: 'disp-v', spacing: 15 });
   calculate();
 
-  // ── MSR2 reticle reference modal ──
+  // ============ MSR2 reticle reference modal ============
   (function () {
-    const modal  = document.getElementById('reticle-modal');
-    const scroll = document.getElementById('modal-scroll');
-    const img    = document.getElementById('reticle-img');
+    const modal = $('reticle-modal');
+    const scroll = $('modal-scroll');
+    const img = $('reticle-img');
     let zoom = 1;
     const MIN = 1, MAX = 5;
 
@@ -479,10 +548,9 @@
       if (focusX != null && prev > 0) {
         const ratio = zoom / prev;
         scroll.scrollLeft = (scroll.scrollLeft + focusX) * ratio - focusX;
-        scroll.scrollTop  = (scroll.scrollTop  + focusY) * ratio - focusY;
+        scroll.scrollTop = (scroll.scrollTop + focusY) * ratio - focusY;
       }
     }
-
     window.openReticle = function () {
       modal.classList.add('open');
       zoom = 1;
@@ -490,12 +558,9 @@
     };
     window.closeReticle = function () { modal.classList.remove('open'); };
 
-    document.getElementById('zoom-in').addEventListener('click', () =>
-      applyZoom(zoom + 0.5, scroll.clientWidth / 2, scroll.clientHeight / 2));
-    document.getElementById('zoom-out').addEventListener('click', () =>
-      applyZoom(zoom - 0.5, scroll.clientWidth / 2, scroll.clientHeight / 2));
+    $('zoom-in').addEventListener('click', () => applyZoom(zoom + 0.5, scroll.clientWidth / 2, scroll.clientHeight / 2));
+    $('zoom-out').addEventListener('click', () => applyZoom(zoom - 0.5, scroll.clientWidth / 2, scroll.clientHeight / 2));
 
-    // pinch zoom
     let pinch = null;
     scroll.addEventListener('touchstart', e => {
       if (e.touches.length === 2) {
@@ -518,7 +583,6 @@
     }, { passive: false });
     scroll.addEventListener('touchend', e => { if (e.touches.length < 2) pinch = null; });
 
-    // double-tap to toggle zoom
     let lastTap = 0;
     scroll.addEventListener('touchend', e => {
       const now = Date.now();
@@ -532,24 +596,26 @@
     });
   })();
 
-  // ── PWA install prompt ──
+  // ============ PWA install ============
   let deferredPrompt = null;
   window.addEventListener('beforeinstallprompt', e => {
     e.preventDefault(); deferredPrompt = e;
-    const banner = document.getElementById('install-banner');
+    const banner = $('install-banner');
     if (!localStorage.getItem('pwa-dismissed')) setTimeout(() => banner.classList.add('visible'), 1500);
   });
-  document.getElementById('btn-install').addEventListener('click', async () => {
+  $('btn-install').addEventListener('click', async () => {
     if (!deferredPrompt) return;
     deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null;
-    document.getElementById('install-banner').classList.remove('visible');
+    $('install-banner').classList.remove('visible');
   });
-  document.getElementById('btn-dismiss').addEventListener('click', () => {
-    document.getElementById('install-banner').classList.remove('visible');
+  $('btn-dismiss').addEventListener('click', () => {
+    $('install-banner').classList.remove('visible');
     localStorage.setItem('pwa-dismissed', '1');
   });
 
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
+})();
+
 </script>
 </body>
 </html>
