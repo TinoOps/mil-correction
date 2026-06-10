@@ -184,7 +184,7 @@
 
   .picker-readout { display: flex; align-items: baseline; justify-content: center; gap: 4px; }
   .picker-val {
-    width: 110px; text-align: center; background: transparent; border: none;
+    width: 140px; text-align: center; background: transparent; border: none;
     outline: none; font-family: var(--mono); font-size: 36px; font-weight: 700;
     padding: 0; -webkit-appearance: none; line-height: 1;
   }
@@ -395,7 +395,7 @@
           </div>
         </div>
         <div class="picker-readout">
-          <input type="number" id="miss-h" class="picker-val val-wind" inputmode="decimal" value="0.0" min="0" step="0.1" autocomplete="off">
+          <input type="number" id="miss-h" class="picker-val val-wind" inputmode="decimal" value="0.00" min="0" step="0.01" autocomplete="off">
           <span class="picker-unit">m</span>
         </div>
         <div class="ruler-screen" id="scr-h">
@@ -418,7 +418,7 @@
           </div>
         </div>
         <div class="picker-readout">
-          <input type="number" id="miss-v" class="picker-val val-elev" inputmode="decimal" value="0.0" min="0" step="0.1" autocomplete="off">
+          <input type="number" id="miss-v" class="picker-val val-elev" inputmode="decimal" value="0.00" min="0" step="0.01" autocomplete="off">
           <span class="picker-unit">m</span>
         </div>
         <div class="ruler-screen" id="scr-v">
@@ -562,8 +562,8 @@
     const cv = document.getElementById(opts.canvasId);
     const out = document.getElementById(opts.outId);
     const ctx = cv.getContext('2d');
-    const SPACING = opts.spacing;   // px per 0.1 m
-    const STEP = 0.1, FRICTION = 0.94, STOP = 0.00002;
+    const SPACING = opts.spacing;   // px per 0.01 m
+    const STEP = 0.01, FRICTION = 0.94, STOP = 0.000004;
     const TICK = 'rgba(232,228,220,0.55)', TICKMIN = 'rgba(232,228,220,0.20)', TXT = 'rgba(232,228,220,0.80)';
     let value = 0, vel = 0, raf = null, lastT = 0, H = 78, W = 0;
     let dragging = false, samples = [], startX = 0, startVal = 0;
@@ -606,7 +606,7 @@
       }
     }
 
-    function setVal(v) { value = Math.max(0, v); out.value = value.toFixed(1); }
+    function setVal(v) { value = Math.max(0, v); out.value = value.toFixed(2); }
 
     function onDown(e) {
       cancelAnimationFrame(raf); raf = null; vel = 0;
