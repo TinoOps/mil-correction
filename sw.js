@@ -1,10 +1,11 @@
-const CACHE = 'milcorr-v2';
+const CACHE = 'milcorr-v4';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  './msr2-reticle.png'
 ];
 
 self.addEventListener('install', e => {
