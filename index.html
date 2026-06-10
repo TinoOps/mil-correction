@@ -81,10 +81,10 @@
   .main { padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
 
   .section-label {
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--text3);
+    color: #a8a59a;
     font-family: var(--mono);
     margin-bottom: 8px;
   }
@@ -173,6 +173,39 @@
     font-family: var(--mono); font-size: 10px; color: var(--text3);
     pointer-events: none; letter-spacing: 0.08em;
   }
+
+  /* ── Drag ruler picker ── */
+  .axis-block { display: flex; flex-direction: column; gap: 10px; }
+  .axis-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .axis-divider { height: 1px; background: var(--border); margin: 1.125rem 0; }
+
+  .seg-compact { width: 132px; flex-shrink: 0; }
+  .seg-compact .seg-btn { padding: 7px 4px; font-size: 12px; min-height: 38px; }
+
+  .picker-readout { display: flex; align-items: baseline; justify-content: center; gap: 4px; }
+  .picker-val {
+    width: 110px; text-align: center; background: transparent; border: none;
+    outline: none; font-family: var(--mono); font-size: 36px; font-weight: 700;
+    padding: 0; -webkit-appearance: none; line-height: 1;
+  }
+  .picker-val.val-wind { color: var(--accent); }
+  .picker-val.val-elev { color: var(--accent2); }
+  .picker-unit { font-size: 14px; color: var(--text2); font-family: var(--mono); }
+
+  .ruler-screen {
+    position: relative; background: var(--bg3);
+    border: 1px solid var(--border2); border-radius: var(--radius);
+    overflow: hidden; touch-action: none; height: 78px; cursor: grab;
+  }
+  .ruler-screen:active { cursor: grabbing; }
+  .ruler-screen canvas { display: block; width: 100%; height: 78px; }
+
+  .ruler-center {
+    position: absolute; top: 12%; bottom: 12%; left: 50%; width: 2px;
+    transform: translateX(-50%); border-radius: 2px; pointer-events: none;
+  }
+  .center-wind { background: var(--accent); box-shadow: 0 0 8px rgba(200,168,75,0.55); }
+  .center-elev { background: var(--accent2); box-shadow: 0 0 8px rgba(143,191,106,0.55); }
 
   .divider { height: 1px; background: var(--border); margin: 1rem 0; }
 
@@ -350,34 +383,47 @@
   <div>
     <div class="section-label">Miss Distance</div>
     <div class="card">
-      <div class="miss-grid">
-        <div class="miss-block">
+      <div class="axis-block">
+        <div class="axis-head">
           <div class="miss-header">
             <div class="type-dot dot-wind"></div>
             <span class="miss-type-label">Windage</span>
           </div>
-          <div class="seg-ctrl">
-            <button class="seg-btn active-wind" id="btn-left"  onclick="setHDir('Left')">◀ LEFT</button>
-            <button class="seg-btn"             id="btn-right" onclick="setHDir('Right')">RIGHT ▶</button>
-          </div>
-          <div class="miss-input-wrap">
-            <input type="number" id="miss-h" inputmode="decimal" placeholder="0.00" min="0" step="0.01" autocomplete="off">
-            <span class="miss-unit">M</span>
+          <div class="seg-ctrl seg-compact">
+            <button class="seg-btn active-wind" id="btn-left"  onclick="setHDir('Left')">◀ L</button>
+            <button class="seg-btn"             id="btn-right" onclick="setHDir('Right')">R ▶</button>
           </div>
         </div>
-        <div class="miss-block">
+        <div class="picker-readout">
+          <input type="number" id="miss-h" class="picker-val val-wind" inputmode="decimal" value="0.0" min="0" step="0.1" autocomplete="off">
+          <span class="picker-unit">m</span>
+        </div>
+        <div class="ruler-screen" id="scr-h">
+          <canvas id="cv-h"></canvas>
+          <div class="ruler-center center-wind"></div>
+        </div>
+      </div>
+
+      <div class="axis-divider"></div>
+
+      <div class="axis-block">
+        <div class="axis-head">
           <div class="miss-header">
             <div class="type-dot dot-elev"></div>
             <span class="miss-type-label">Elevation</span>
           </div>
-          <div class="seg-ctrl">
-            <button class="seg-btn active-elev" id="btn-high" onclick="setVDir('High')">▲ HIGH</button>
-            <button class="seg-btn"             id="btn-low"  onclick="setVDir('Low')">LOW ▼</button>
+          <div class="seg-ctrl seg-compact">
+            <button class="seg-btn active-elev" id="btn-high" onclick="setVDir('High')">▲ H</button>
+            <button class="seg-btn"             id="btn-low"  onclick="setVDir('Low')">L ▼</button>
           </div>
-          <div class="miss-input-wrap">
-            <input type="number" id="miss-v" inputmode="decimal" placeholder="0.00" min="0" step="0.01" autocomplete="off">
-            <span class="miss-unit">M</span>
-          </div>
+        </div>
+        <div class="picker-readout">
+          <input type="number" id="miss-v" class="picker-val val-elev" inputmode="decimal" value="0.0" min="0" step="0.1" autocomplete="off">
+          <span class="picker-unit">m</span>
+        </div>
+        <div class="ruler-screen" id="scr-v">
+          <canvas id="cv-v"></canvas>
+          <div class="ruler-center center-elev"></div>
         </div>
       </div>
     </div>
@@ -509,8 +555,144 @@
   }
 
   document.getElementById('range').addEventListener('input', calculate);
-  document.getElementById('miss-h').addEventListener('input', calculate);
-  document.getElementById('miss-v').addEventListener('input', calculate);
+
+  // ── Drag ruler picker engine ──
+  function makeRuler(opts) {
+    const screen = document.getElementById(opts.screenId);
+    const cv = document.getElementById(opts.canvasId);
+    const out = document.getElementById(opts.outId);
+    const ctx = cv.getContext('2d');
+    const SPACING = opts.spacing;   // px per 0.1 m
+    const STEP = 0.1, FRICTION = 0.94, STOP = 0.00002;
+    const TICK = 'rgba(232,228,220,0.55)', TICKMIN = 'rgba(232,228,220,0.20)', TXT = 'rgba(232,228,220,0.80)';
+    let value = 0, vel = 0, raf = null, lastT = 0, H = 78, W = 0;
+    let dragging = false, samples = [], startX = 0, startVal = 0;
+
+    function resize() {
+      W = screen.clientWidth;
+      const dpr = window.devicePixelRatio || 1;
+      cv.width = Math.round(W * dpr);
+      cv.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      draw();
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      const cx = W / 2;
+      const half = Math.ceil((W / 2) / SPACING) + 2;
+      const base = Math.round(value / STEP);
+      for (let i = -half; i <= half; i++) {
+        const idx = base + i;
+        const t = idx * STEP;
+        if (t < -1e-9) continue;
+        const x = cx + (t - value) / STEP * SPACING;
+        if (x < -20 || x > W + 20) continue;
+        const major = (idx % 10 === 0);
+        const mid = (idx % 5 === 0);
+        const h = major ? 30 : (mid ? 20 : 13);
+        ctx.strokeStyle = major ? TICK : TICKMIN;
+        ctx.lineWidth = major ? 1.6 : 1;
+        ctx.beginPath();
+        ctx.moveTo(x, H * 0.18);
+        ctx.lineTo(x, H * 0.18 + h);
+        ctx.stroke();
+        if (major) {
+          ctx.fillStyle = TXT;
+          ctx.font = '12px "Share Tech Mono", monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText(t.toFixed(1), x, H * 0.18 + h + 16);
+        }
+      }
+    }
+
+    function setVal(v) { value = Math.max(0, v); out.value = value.toFixed(1); }
+
+    function onDown(e) {
+      cancelAnimationFrame(raf); raf = null; vel = 0;
+      dragging = true;
+      screen.setPointerCapture(e.pointerId);
+      startX = e.clientX; startVal = value;
+      samples = [{ p: startX, t: performance.now() }];
+      e.preventDefault();
+    }
+    function onMove(e) {
+      if (!dragging) return;
+      const d = e.clientX - startX;
+      setVal(startVal - (d / SPACING) * STEP);
+      samples.push({ p: e.clientX, t: performance.now() });
+      if (samples.length > 6) samples.shift();
+      draw(); calculate();
+      e.preventDefault();
+    }
+    function onUp() {
+      if (!dragging) return;
+      dragging = false;
+      const now = performance.now();
+      const recent = samples.filter(s => now - s.t < 90);
+      let vPx = 0;
+      if (recent.length >= 2) {
+        const a = recent[0], b = recent[recent.length - 1];
+        const dt = b.t - a.t;
+        if (dt > 0) vPx = (b.p - a.p) / dt;
+      }
+      vel = -(vPx / SPACING) * STEP;
+      lastT = performance.now();
+      if (Math.abs(vel) > STOP) raf = requestAnimationFrame(inertia);
+      else snap();
+    }
+    function inertia() {
+      const now = performance.now();
+      const dt = Math.min(40, now - lastT); lastT = now;
+      setVal(value + vel * dt);
+      vel *= Math.pow(FRICTION, dt / 16.67);
+      if (value <= 0 && vel < 0) vel = 0;
+      draw(); calculate();
+      if (Math.abs(vel) > STOP) raf = requestAnimationFrame(inertia);
+      else snap();
+    }
+    function snap() {
+      const start = value, target = Math.max(0, Math.round(value / STEP) * STEP);
+      if (Math.abs(target - start) < 1e-4) { setVal(target); draw(); calculate(); return; }
+      const dur = 200, t0 = performance.now();
+      (function step() {
+        const k = Math.min(1, (performance.now() - t0) / dur);
+        const e = 1 - Math.pow(1 - k, 3);
+        setVal(start + (target - start) * e);
+        draw();
+        if (k < 1) requestAnimationFrame(step);
+        else { setVal(target); draw(); calculate(); }
+      })();
+    }
+    function onWheel(e) {
+      cancelAnimationFrame(raf); raf = null; vel = 0;
+      setVal(value + (e.deltaY > 0 ? -STEP : STEP));
+      draw(); calculate();
+      clearTimeout(screen._wt);
+      screen._wt = setTimeout(snap, 140);
+      e.preventDefault();
+    }
+
+    out.addEventListener('input', () => {
+      let v = parseFloat(out.value);
+      if (isNaN(v)) return;
+      cancelAnimationFrame(raf); raf = null; vel = 0;
+      value = Math.max(0, v);
+      draw(); calculate();
+    });
+    out.addEventListener('blur', () => { setVal(value); });
+
+    screen.addEventListener('pointerdown', onDown);
+    screen.addEventListener('pointermove', onMove);
+    screen.addEventListener('pointerup', onUp);
+    screen.addEventListener('pointercancel', onUp);
+    screen.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('resize', resize);
+    resize();
+  }
+
+  makeRuler({ screenId: 'scr-h', canvasId: 'cv-h', outId: 'miss-h', spacing: 15 });
+  makeRuler({ screenId: 'scr-v', canvasId: 'cv-v', outId: 'miss-v', spacing: 15 });
 
   // ── PWA install prompt ──
   let deferredPrompt = null;
