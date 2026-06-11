@@ -1,4 +1,4 @@
-const CACHE = 'milcorr-b1';
+const CACHE = 'milcorr-b5';
 const ASSETS = [
   './',
   './index.html',
